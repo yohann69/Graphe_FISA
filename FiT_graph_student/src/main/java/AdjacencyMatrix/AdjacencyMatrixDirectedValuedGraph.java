@@ -29,7 +29,6 @@ public class AdjacencyMatrixDirectedValuedGraph extends AdjacencyMatrixDirectedG
      */
 	@Override
 	public void removeArc(int from, int to) {
-		super.removeArc(from, to);
 		// A completer
 	}
 
@@ -40,15 +39,7 @@ public class AdjacencyMatrixDirectedValuedGraph extends AdjacencyMatrixDirectedG
 		// A completer
 	}
 
-	/**
-	 * @return a new graph which is the inverse graph of this.matrix.
- 	 */
-	public AdjacencyMatrixDirectedValuedGraph computeInverse() {
-		AdjacencyMatrixDirectedValuedGraph amInv = new AdjacencyMatrixDirectedValuedGraph(this.matrix);	
-		// A completer
-				
-		return amInv;
-	}
+	
 	
 	@Override
 	public String toString() {

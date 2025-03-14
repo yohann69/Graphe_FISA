@@ -37,7 +37,6 @@ public class AdjacencyMatrixUndirectedValuedGraph extends AdjacencyMatrixUndirec
      * adds the edge (x,y,cost). If there is already one initial cost, we replace it.
      */
 	public void addEdge(int x, int y, int cost ) {
-		super.addEdge(x,y);
 		// A completer
 	}
 	
