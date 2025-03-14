@@ -19,8 +19,8 @@ public class AdjacencyMatrixUndirectedGraph {
     // 				Class variables
     //--------------------------------------------------
 
-    protected int order;		// Number of vertices
-    protected int m = 0;		// Number of edges/arcs
+    protected int nbNodes;		// Number of vertices
+    protected int nbEdges;		// Number of edges/arcs
     protected int[][] matrix;	// The adjacency matrix
 
   
@@ -32,25 +32,26 @@ public class AdjacencyMatrixUndirectedGraph {
 	
 	public AdjacencyMatrixUndirectedGraph() {
 		this.matrix = new int[0][0];
-        this.order = 0;
-        this.m = 0;
+        this.nbNodes = 0;
+        this.nbEdges = 0;
 	}
 	
 	public AdjacencyMatrixUndirectedGraph(int[][] mat) {
-		this.order=mat.length;
-		this.matrix = new int[this.order][this.order];
-		for(int i = 0; i<this.order; i++){
-			for(int j = i; j<this.order; j++){
+		this.nbNodes=mat.length;
+		this.nbEdges = 0;
+		this.matrix = new int[this.nbNodes][this.nbNodes];
+		for(int i = 0; i<this.nbNodes; i++){
+			for(int j = i; j<this.nbNodes; j++){
 				this.matrix[i][j] = mat[i][j];
 				this.matrix[j][i] = mat[i][j];
-				this.m += mat[i][j];
+				this.nbEdges += mat[i][j];
 			}
 		}	
 	}
 	
 	public AdjacencyMatrixUndirectedGraph(AdjacencyListUndirectedGraph g) {
-		this.order = g.getNbNodes(); 				
-		this.m = g.getNbEdges(); 				
+		this.nbNodes = g.getNbNodes(); 				
+		this.nbEdges = g.getNbEdges(); 				
 		this.matrix = g.toAdjacencyMatrix(); 
 	}
 
@@ -69,14 +70,14 @@ public class AdjacencyMatrixUndirectedGraph {
      * @return the number of nodes in the graph (referred to as the order of the graph)
      */
     public int getNbNodes() {
-        return this.order;
+        return this.nbNodes;
     }
 	
     /**
 	 * @return the number of edges in the graph
  	 */	
 	public int getNbEdges() {
-		return this.m;
+		return this.nbEdges;
 	}
 
 	/**

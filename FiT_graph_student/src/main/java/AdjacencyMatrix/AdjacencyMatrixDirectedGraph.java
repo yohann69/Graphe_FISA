@@ -20,8 +20,8 @@ public class AdjacencyMatrixDirectedGraph {
     // 				Class variables
     //--------------------------------------------------
 
-    protected int order;		// Number of vertices
-    protected int m = 0;		// Number of edges/arcs
+    protected int nbNodes;		// Number of vertices
+    protected int nbArcs;		// Number of edges/arcs
     protected int[][] matrix;	// The adjacency matrix
 	
 	//--------------------------------------------------
@@ -30,25 +30,26 @@ public class AdjacencyMatrixDirectedGraph {
 
     public AdjacencyMatrixDirectedGraph() {
         this.matrix = new int[0][0];
-        this.order = 0;
-        this.m = 0;
+        this.nbNodes = 0;
+        this.nbArcs = 0;
     }
 
       
 	public AdjacencyMatrixDirectedGraph(int[][] mat) {
-		this.order = mat.length;
-		this.matrix = new int[this.order][this.order];
-		for(int i = 0; i<this.order; i++){
-			for(int j = 0; j<this.order; j++){
+		this.nbNodes = mat.length;
+		this.nbArcs = 0;
+		this.matrix = new int[this.nbNodes][this.nbNodes];
+		for(int i = 0; i<this.nbNodes; i++){
+			for(int j = 0; j<this.nbNodes; j++){
 				this.matrix[i][j] = mat[i][j];
-				this.m += mat[i][j];
+				this.nbArcs += mat[i][j];
 			}
 		}
 	}
 
 	public AdjacencyMatrixDirectedGraph(AdjacencyListDirectedGraph g) {
-		this.order = g.getNbNodes();
-		this.m = g.getNbArcs();
+		this.nbNodes = g.getNbNodes();
+		this.nbArcs = g.getNbArcs();
 		this.matrix = g.toAdjacencyMatrix();
 	}
 
@@ -68,14 +69,14 @@ public class AdjacencyMatrixDirectedGraph {
      * Returns the number of nodes in the graph (referred to as the order of the graph)
      */
     public int getNbNodes() {
-        return this.order;
+        return this.nbNodes;
     }
 	
     /**
 	 * @return the number of arcs in the graph
  	 */	
 	public int getNbArcs() {
-		return this.m;
+		return this.nbArcs;
 	}
 
 	
