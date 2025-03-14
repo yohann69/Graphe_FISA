@@ -1,11 +1,15 @@
 package Nodes_Edges;
 
 public class Edge extends AbstractEdgeArc {
+	
+	//--------------------------------------------------
+    // 				Class variables
+    //--------------------------------------------------
 
 	
-	/*public Edge(String s) {
-		super(s); 
-	}*/
+	//--------------------------------------------------
+    // 				Constructors
+    //--------------------------------------------------
 	
 	public Edge(UndirectedNode node1, UndirectedNode node2) {
 		super(node1, node2);
@@ -14,9 +18,13 @@ public class Edge extends AbstractEdgeArc {
 	
 	public Edge(UndirectedNode node1, UndirectedNode node2, int weight) {
 		super(node1, node2,weight);
-	}
+	}	
+
 	
-		
+	// ------------------------------------------
+    // 				Accessors
+    // ------------------------------------------
+	
 	/**
 	 * @return the first node incident to the edge
 	 */
@@ -44,6 +52,11 @@ public class Edge extends AbstractEdgeArc {
 	public void setSecondNode(UndirectedNode n2){
 		this.node2 = n2;
 	}
+	
+	
+	// ------------------------------------------
+    // 				Methods
+    // ------------------------------------------
 
 	/**
 	 * check if two edges are equals => the nodes are the same
