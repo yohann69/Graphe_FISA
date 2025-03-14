@@ -14,8 +14,8 @@ public class AdjacencyListUndirectedGraph {
     // 				Class variables
     //--------------------------------------------------
 
-	protected List<UndirectedNode> nodes;
-	protected List<Edge> edges;
+	protected List<UndirectedNode> nodes; // list of the nodes in the graph
+	protected List<Edge> edges; // list of the edges in the graph
     protected int nbNodes; // number of nodes
     protected int nbEdges; // number of edges
 

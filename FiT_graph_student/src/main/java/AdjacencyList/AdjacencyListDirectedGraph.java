@@ -21,8 +21,8 @@ public class AdjacencyListDirectedGraph {
 
 	private static int _DEBBUG =0;
 	
-	protected List<DirectedNode> nodes;
-	protected List<Arc> arcs;
+	protected List<DirectedNode> nodes; // list of the nodes in the graph
+	protected List<Arc> arcs; // list of the arcs in the graph
     protected int nbNodes; // number of nodes
     protected int nbArcs; // number of arcs
 	
