@@ -15,7 +15,6 @@ public class AdjacencyListUndirectedValuedGraph extends AdjacencyListUndirectedG
     public AdjacencyListUndirectedValuedGraph(int[][] matrixVal) {
     	super();
     	this.nbNodes = matrixVal.length;
-        //this.nodes = new ArrayList<>();
         
         for (int i = 0; i < this.nbNodes; i++) {
             this.nodes.add(new UndirectedNode(i));            
