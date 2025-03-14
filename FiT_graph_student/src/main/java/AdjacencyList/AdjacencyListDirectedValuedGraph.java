@@ -17,7 +17,6 @@ public class AdjacencyListDirectedValuedGraph extends AdjacencyListDirectedGraph
 	public AdjacencyListDirectedValuedGraph(int[][] matrixVal) {
     	super();
     	this.nbNodes = matrixVal.length;
-        this.nodes = new ArrayList<DirectedNode>();
         for (int i = 0; i < this.nbNodes; i++) {
             this.nodes.add(new DirectedNode(i));
         }
