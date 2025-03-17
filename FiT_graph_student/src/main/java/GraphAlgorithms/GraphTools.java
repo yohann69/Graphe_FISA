@@ -12,11 +12,11 @@ public class GraphTools {
 
 	/**
 	 * 
-	 * @param n, the number of vertices
-	 * @param multi, at true if we want a multi-graph
-	 * @param s, at true if the graph is symmetric
-	 * @param c, at true if the graph is connected
-	 * @param seed, the unique seed giving a unique random graph
+	 * @param n the number of vertices
+	 * @param multi at true if we want a multi-graph
+	 * @param s at true if the graph is symmetric
+	 * @param c at true if the graph is connected
+	 * @param seed the unique seed giving a unique random graph
 	 * @return the generated matrix 
 	 */ 
 	public static int[][] generateGraphData(int n, boolean multi, boolean s, boolean c, int seed){
@@ -84,12 +84,12 @@ public class GraphTools {
 
 	/**
 	 * 
-	 * @param n, the number of vertices
-	 * @param m, the number of edges
-	 * @param multi, at true if we want a multi-graph
-	 * @param s, at true if the graph is symmetric
-	 * @param c, at true if the graph is connexted
-	 * @param seed, the unique seed giving a unique random graph
+	 * @param n the number of vertices
+	 * @param m the number of edges
+	 * @param multi at true if we want a multi-graph
+	 * @param s at true if the graph is symmetric
+	 * @param c at true if the graph is connected
+	 * @param seed the unique seed giving a unique random graph
 	 * @return the generated matrix
 	 */ 
 	public static int[][] generateGraphData(int n, int m, boolean multi, boolean s, boolean c, int seed){
@@ -154,12 +154,12 @@ public class GraphTools {
 
 	/**
 	 * 
-	 * @param n, the number of vertices
-	 * @param multi, at true if we want a multi-graph
-	 * @param s, at true if the graph is symmetric
-	 * @param c, at true if the graph is connexted
-	 * @param neg, at true if the graph has negative weights 
-	 * @param seed, the unique seed giving a unique random graph
+	 * @param n the number of vertices
+	 * @param multi at true if we want a multi-graph
+	 * @param s at true if the graph is symmetric
+	 * @param c at true if the graph is connected
+	 * @param neg at true if the graph has negative weights 
+	 * @param seed the unique seed giving a unique random graph
 	 */
 	public static int[][] generateValuedGraphData(int n, boolean multi, boolean s, boolean c, boolean neg, int seed){
 		if(_DEBBUG>0){
