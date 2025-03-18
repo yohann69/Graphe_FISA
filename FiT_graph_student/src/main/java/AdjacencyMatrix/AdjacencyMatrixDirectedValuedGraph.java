@@ -24,14 +24,7 @@ public class AdjacencyMatrixDirectedValuedGraph extends AdjacencyMatrixDirectedG
 	// 					Methods
 	// ------------------------------------------------	
 	
-	/**
-     * removes the arc (from,to) if there exists one between these nodes in the graph.
-     */
-	@Override
-	public void removeArc(int from, int to) {
-		// A completer
-	}
-
+	
 	/**
      * adds the arc (from,to,cost). If there is already one initial cost, we replace it.
      */	

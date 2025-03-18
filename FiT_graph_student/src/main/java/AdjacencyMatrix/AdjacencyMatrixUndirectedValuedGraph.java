@@ -25,14 +25,7 @@ public class AdjacencyMatrixUndirectedValuedGraph extends AdjacencyMatrixUndirec
 	// 					Methods 
 	// ------------------------------------------------	
 	
-	/**
-     * removes the edge (x,y) if there exists one between these nodes in the graph.
-     */
 	
-	public void removeEdge(int x, int y) {
-		// A completer
-	}
-
 	/**
      * adds the edge (x,y,cost). If there is already one initial cost, we replace it.
      */
