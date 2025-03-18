@@ -141,7 +141,8 @@ public class AdjacencyListDirectedGraph {
     }
 
     /**
-	* Adds the arc (from,to) if it is not already present in the graph, requires the existing of nodes from and to. And add this arc and the inverse in the list of arcs from the two extremities (nodes) 
+	* Adds the arc (from,to) if it is not already present in the graph, requires the existing of nodes from and to. 
+	* And add this arc to the incident list of both extremities (nodes) and into the global list "arcs" of the graph.   	 
   	* On non-valued graph, every arc has a weight equal to 0.
  	*/
     public void addArc(DirectedNode from, DirectedNode to) {

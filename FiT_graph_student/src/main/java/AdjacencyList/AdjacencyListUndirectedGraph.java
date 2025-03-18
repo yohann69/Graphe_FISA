@@ -134,8 +134,9 @@ public class AdjacencyListUndirectedGraph {
     }
 
     /**
-     * Adds edge (x,y), requires that nodes x and y already exist. And add this edge and the inverse in the list of edges from the two extremities (nodes)
-     * In non-valued graph, every edge has a cost equal to 0
+     * Adds edge (x,y) if it is not already present in the graph, requires that nodes x and y already exist. 
+     * And adds this edge to the incident list of both extremities (nodes) and into the global list "edges" of the graph.
+     * In non-valued graph, every edge has a cost equal to 0.
      */
     public void addEdge(UndirectedNode x, UndirectedNode y) {
     	if(!isEdge(x,y)){

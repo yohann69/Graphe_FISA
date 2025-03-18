@@ -40,7 +40,8 @@ public class AdjacencyListDirectedValuedGraph extends AdjacencyListDirectedGraph
     
 
     /**
-     * Adds the arc (from,to) with cost if it is not already present in the graph. And add this arc and the inverse in the list of arcs from the two extremities (nodes)
+     * Adds the arc (from,to) with cost if it is not already present in the graph. 
+     * And adds this arc to the incident list of both extremities (nodes) and into the global list "arcs" of the graph.
      */
     public void addArc(DirectedNode from, DirectedNode to, int cost) {
     	// A completer      

@@ -39,7 +39,8 @@ public class AdjacencyListUndirectedValuedGraph extends AdjacencyListUndirectedG
     
 
     /**
-     * Adds the edge (from,to) with cost if it is not already present in the graph
+     * Adds the edge (from,to) with cost if it is not already present in the graph.
+     * And adds this edge to the incident list of both extremities (nodes) and into the global list "edges" of the graph.
      */
     public void addEdge(UndirectedNode x, UndirectedNode y, int cost) {
     	// A completer
