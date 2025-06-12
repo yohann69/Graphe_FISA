@@ -93,6 +93,59 @@ public class GraphToolsList  extends GraphTools {
 	public static List<Integer> BFS(AdjacencyListDirectedGraph graph) {
 		return BFS(graph, 0);
 	}
+	
+	/**
+	 * Exploration complète du graphe en utilisant le parcours en profondeur (DFS) récursif
+	 * Lance l'exploration depuis les sommets non visités
+	 * @param graph le graphe à explorer
+	 * @return la liste des nœuds visités dans l'ordre DFS
+	 */
+	public static List<Integer> explorerGraphe(AdjacencyListDirectedGraph graph) {
+		int nbNodes = graph.getNbNodes();
+		visite = new int[nbNodes];
+		debut = new int[nbNodes];
+		fin = new int[nbNodes];
+		order_CC = new ArrayList<>();
+		cpt = 0;
+		
+		for (int i = 0; i < nbNodes; i++) {
+			visite[i] = 0;
+		}
+		
+		System.out.println("=== Parcours DFS récursif ===");
+		System.out.print("Ordre de visite DFS : ");
+		
+		for (int i = 0; i < nbNodes; i++) {
+			if (visite[i] == 0) {
+				explorerSommet(graph, i);
+			}
+		}
+		
+		System.out.println();
+		return order_CC;
+	}
+	
+	/**
+	 * Exploration récursive en profondeur d'un sommet et de ses voisins
+	 * @param graph le graphe à explorer
+	 * @param sommet le sommet à explorer
+	 */
+	private static void explorerSommet(AdjacencyListDirectedGraph graph, int sommet) {
+		visite[sommet] = 1;
+		debut[sommet] = cpt++;
+		order_CC.add(sommet);
+		
+		System.out.print(sommet + " ");
+		
+		DirectedNode node = graph.getNodes().get(sommet);
+		for (int i = 0; i < graph.getNbNodes(); i++) {
+			if (graph.isArc(node, graph.getNodes().get(i)) && visite[i] == 0) {
+				explorerSommet(graph, i);
+			}
+		}
+		
+		fin[sommet] = cpt++;
+	}
 
 
 	public static void main(String[] args) {
@@ -115,6 +168,18 @@ public class GraphToolsList  extends GraphTools {
 		
 		System.out.println("\n>>> Test BFS à partir du nœud 7 :");
 		List<Integer> bfsResult7 = BFS(al, 7);
+		
+		System.out.println("\n" + "=".repeat(60));
+		System.out.println("TEST DU PARCOURS DFS RÉCURSIF");
+		System.out.println("=".repeat(60));
+		
+		List<Integer> dfsResult = explorerGraphe(al);
+		System.out.println("Résultat sous forme de liste : " + dfsResult);
+		System.out.println("Nombre de nœuds visités : " + dfsResult.size() + "/" + al.getNbNodes());
+		
+		System.out.println("\n=== Comparaison BFS vs DFS ===");
+		System.out.println("BFS depuis nœud 0 : " + bfsResult0);
+		System.out.println("DFS complet       : " + dfsResult);
 		
 		System.out.println("\n" + "=".repeat(60));
 		System.out.println("VÉRIFICATION DES PROPRIÉTÉS BFS");
@@ -157,12 +222,22 @@ public class GraphToolsList  extends GraphTools {
 		System.out.println("\n>>> BFS sur le graphe simple à partir du nœud 0 :");
 		List<Integer> simpleBFS = BFS(simpleGraph, 0);
 		
+		System.out.println("\n>>> DFS sur le graphe simple :");
+		List<Integer> simpleDFS = explorerGraphe(simpleGraph);
+		
+		System.out.println("\nComparaison BFS vs DFS sur graphe simple :");
+		System.out.println("BFS : " + simpleBFS + " (largeur d'abord - niveau par niveau)");
+		System.out.println("DFS : " + simpleDFS + " (profondeur d'abord - va au bout d'un chemin)");
+		
 		System.out.println("\nAnalyse de l'ordre BFS :");
 		System.out.println("- Niveau 0 : nœud 0 (départ)");
 		System.out.println("- Niveau 1 : nœuds 1, 2 (voisins directs de 0)");
 		System.out.println("- Niveau 2 : nœud 3 (voisin de 1 et 2)");
-		System.out.println("Ordre attendu : 0 1 2 3 (ou 0 2 1 3 selon l'implémentation)");
-		System.out.println("Ordre obtenu  : " + simpleBFS);
+		
+		System.out.println("\nAnalyse de l'ordre DFS :");
+		System.out.println("- Commence par 0, va vers 1, puis vers 3 (profondeur max)");
+		System.out.println("- Remonte et explore 2 (autre voisin de 0)");
+		System.out.println("Ordre attendu DFS : 0 1 3 2 (profondeur d'abord)");
 	}
 	
 	/**
