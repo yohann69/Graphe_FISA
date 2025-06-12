@@ -120,8 +120,19 @@ public class AdjacencyListUndirectedGraph {
      * @return true if there is an edge between x and y
      */
     public boolean isEdge(UndirectedNode x, UndirectedNode y) {      	
-        // A completer
-    	return true;
+        if (x == null || y == null) {
+            return false;
+        }
+        
+        UndirectedNode nodeX = getNodeOfList(x);
+        
+        for (Edge edge : nodeX.getIncidentEdges()) {
+            if (edge.getSecondNode().equals(y)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     /**
@@ -129,7 +140,28 @@ public class AdjacencyListUndirectedGraph {
      */
     public void removeEdge(UndirectedNode x, UndirectedNode y) {
     	if(isEdge(x,y)){
-    		// A completer
+    		UndirectedNode nodeX = getNodeOfList(x);
+    		UndirectedNode nodeY = getNodeOfList(y);
+    		
+    		Edge edgeToRemove = null;
+    		
+    		for (Edge edge : nodeX.getIncidentEdges()) {
+    			if (edge.getSecondNode().equals(nodeY)) {
+    				edgeToRemove = edge;
+    				break;
+    			}
+    		}
+    		
+    		if (edgeToRemove != null) {
+    			nodeX.getIncidentEdges().remove(edgeToRemove);
+    			
+    			Edge edgeInverse = new Edge(nodeY, nodeX, edgeToRemove.getWeight());
+    			nodeY.getIncidentEdges().remove(edgeInverse);
+    			
+    			this.edges.remove(edgeToRemove);
+    			
+    			this.nbEdges--;
+    		}
     	}
     }
 
@@ -140,7 +172,18 @@ public class AdjacencyListUndirectedGraph {
      */
     public void addEdge(UndirectedNode x, UndirectedNode y) {
     	if(!isEdge(x,y)){
-    		// A completer
+    		UndirectedNode nodeX = getNodeOfList(x);
+    		UndirectedNode nodeY = getNodeOfList(y);
+    		
+    		Edge newEdge = new Edge(nodeX, nodeY, 0); // Poids 0 par défaut pour graphe non valué
+    		
+    		nodeX.addEdge(newEdge);
+    		
+    		nodeY.addEdge(newEdge);
+    		
+    		this.edges.add(newEdge);
+    		
+    		this.nbEdges++;
     	}
     }
 
@@ -162,7 +205,23 @@ public class AdjacencyListUndirectedGraph {
      */
     public int[][] toAdjacencyMatrix() {
         int[][] matrix = new int[nbNodes][nbNodes];
-        // A completer
+        
+        for (UndirectedNode node : this.nodes) {
+            int i = node.getLabel();
+            
+            for (Edge edge : node.getIncidentEdges()) {
+                int j = edge.getSecondNode().getLabel();
+                
+                int weight = edge.getWeight();
+                if (weight == 0) {
+                    weight = 1; // Pour les graphes non valués, on met 1
+                }
+                
+                matrix[i][j] = weight;
+                matrix[j][i] = weight; // Symétrie pour graphe non orienté
+            }
+        }
+        
         return matrix;
     }
 
@@ -193,8 +252,50 @@ public class AdjacencyListUndirectedGraph {
         System.out.println(al);        
         System.out.println("(n_2,n_5) is it in the graph ? " +  al.isEdge(al.getNodes().get(2), al.getNodes().get(5)));
         
+        System.out.println("\n=== Tests des méthodes ===");
         
-        // A completer
+        // Test isEdge
+        UndirectedNode node0 = al.getNodes().get(0);
+        UndirectedNode node1 = al.getNodes().get(1);
+        UndirectedNode node2 = al.getNodes().get(2);
+        
+        System.out.println("isEdge(n_0, n_1) : " + al.isEdge(node0, node1));
+        System.out.println("isEdge(n_1, n_2) : " + al.isEdge(node1, node2));
+        
+        // Test addEdge
+        System.out.println("\nAjout d'une arête (n_0, n_9)");
+        UndirectedNode node9 = al.getNodes().get(9);
+        System.out.println("Avant ajout - isEdge(n_0, n_9) : " + al.isEdge(node0, node9));
+        al.addEdge(node0, node9);
+        System.out.println("Après ajout - isEdge(n_0, n_9) : " + al.isEdge(node0, node9));
+        System.out.println("Symétrie - isEdge(n_9, n_0) : " + al.isEdge(node9, node0));
+        System.out.println("Nombre d'arêtes après ajout : " + al.getNbEdges());
+        
+        // Test removeEdge
+        System.out.println("\nSuppression de l'arête (n_0, n_9)");
+        al.removeEdge(node0, node9);
+        System.out.println("Après suppression - isEdge(n_0, n_9) : " + al.isEdge(node0, node9));
+        System.out.println("Nombre d'arêtes après suppression : " + al.getNbEdges());
+        
+        System.out.println("\n=== Test de conversion en matrice d'adjacence ===");
+        int[][] matrix = al.toAdjacencyMatrix();
+        System.out.println("Matrice d'adjacence (extrait 5x5) :");
+        for (int i = 0; i < Math.min(5, matrix.length); i++) {
+            for (int j = 0; j < Math.min(5, matrix[i].length); j++) {
+                System.out.print(matrix[i][j] + "\t");
+            }
+            System.out.println();
+        }
+        
+        System.out.println("\nVérification cohérence matrice/liste :");
+        for (int i = 0; i < Math.min(3, matrix.length); i++) {
+            for (int j = i + 1; j < Math.min(3, matrix[i].length); j++) {
+                boolean matrixEdge = matrix[i][j] > 0;
+                boolean listEdge = al.isEdge(al.getNodes().get(i), al.getNodes().get(j));
+                System.out.println("Arête (" + i + "," + j + ") - Matrice: " + matrixEdge + ", Liste: " + listEdge + 
+                                 " " + (matrixEdge == listEdge ? "✓" : "✗"));
+            }
+        }
     }
 
 }
