@@ -153,8 +153,15 @@ public class AdjacencyMatrixDirectedGraph {
 	 * @return a new graph which is the inverse graph of this.matrix
  	 */
 	public AdjacencyMatrixDirectedGraph computeInverse() {
-		AdjacencyMatrixDirectedGraph amInv = new AdjacencyMatrixDirectedGraph(this.matrix);	
-		// A completer
+		int[][] inverseMatrix = new int[this.nbNodes][this.nbNodes];
+		
+		for (int i = 0; i < this.nbNodes; i++) {
+			for (int j = 0; j < this.nbNodes; j++) {
+				inverseMatrix[j][i] = this.matrix[i][j];
+			}
+		}
+		
+		AdjacencyMatrixDirectedGraph amInv = new AdjacencyMatrixDirectedGraph(inverseMatrix);	
 		return amInv;
 	}
 
@@ -226,5 +233,28 @@ public class AdjacencyMatrixDirectedGraph {
 		System.out.println("isArc(0, 15) : " + am.isArc(0, 15));
 		
 		System.out.println("\nNombre final d'arcs : " + am.getNbArcs());
+		
+		System.out.println("\n=== Test de computeInverse() ===");
+		System.out.println("\nGraphe original :");
+		System.out.println("Successeurs de 1 : " + am.getSuccessors(1));
+		System.out.println("Prédécesseurs de 1 : " + am.getPredecessors(1));
+		
+		AdjacencyMatrixDirectedGraph inverse = am.computeInverse();
+		System.out.println("\nGraphe inverse :");
+		System.out.println("Successeurs de 1 dans l'inverse : " + inverse.getSuccessors(1));
+		System.out.println("Prédécesseurs de 1 dans l'inverse : " + inverse.getPredecessors(1));
+		
+		System.out.println("\n=== Vérification de l'inversion ===");
+		
+		am.addArc(3, 7);
+		inverse = am.computeInverse();
+		
+		System.out.println("Arc (3,7) dans le graphe original : " + am.isArc(3, 7));
+		System.out.println("Arc (7,3) dans le graphe inverse : " + inverse.isArc(7, 3));
+		System.out.println("Arc (7,3) dans le graphe original : " + am.isArc(7, 3));
+		System.out.println("Arc (3,7) dans le graphe inverse : " + inverse.isArc(3, 7));
+		
+		System.out.println("\nNombre d'arcs dans le graphe original : " + am.getNbArcs());
+		System.out.println("Nombre d'arcs dans le graphe inverse : " + inverse.getNbArcs());
 	}
 }
