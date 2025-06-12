@@ -117,22 +117,36 @@ public class AdjacencyMatrixDirectedGraph {
 	 * @return true if the arc (from,to) exists in the graph.
  	 */
 	public boolean isArc(int from, int to) {
-		// A completer
-		return true;
+		if (from < 0 || from >= nbNodes || to < 0 || to >= nbNodes) {
+			return false;
+		}
+		return matrix[from][to] > 0;
 	}
 
 	/**
 	 * removes the arc (from,to) if there exists one between these nodes in the graph.
 	 */
 	public void removeArc(int from, int to) {
-		// A completer
+		if (from < 0 || from >= nbNodes || to < 0 || to >= nbNodes) {
+			return;
+		}
+		
+		if (matrix[from][to] > 0) {
+			matrix[from][to] = matrix[from][to] - 1;
+			nbArcs--;
+		}
 	}
 
 	/**
 	 * Adds the arc (from,to). 
 	 */
 	public void addArc(int from, int to) {
-		// A completer
+		if (from < 0 || from >= nbNodes || to < 0 || to >= nbNodes) {
+			return;
+		}
+		
+		matrix[from][to] = matrix[from][to] + 1;
+		nbArcs++;
 	}
 
 	/**
@@ -176,6 +190,41 @@ public class AdjacencyMatrixDirectedGraph {
 		for (Integer integer : t2) {
 			System.out.print(integer + ", ");
 		}
-		// A completer
+		
+		// Tests additionnels pour vérifier les méthodes
+		System.out.println("\n\n=== Tests des méthodes ===");
+		
+		// Test isArc
+		System.out.println("isArc(0, 1) : " + am.isArc(0, 1));
+		System.out.println("isArc(1, 0) : " + am.isArc(1, 0)); // Direction opposée
+		
+		// Test addArc et removeArc
+		System.out.println("\nAjout d'un arc (7, 8)");
+		am.addArc(7, 8);
+		System.out.println("isArc(7, 8) après ajout : " + am.isArc(7, 8));
+		System.out.println("isArc(8, 7) après ajout : " + am.isArc(8, 7)); // Direction opposée
+		
+		System.out.println("\nSuppression de l'arc (7, 8)");
+		am.removeArc(7, 8);
+		System.out.println("isArc(7, 8) après suppression : " + am.isArc(7, 8));
+		
+		// Test avec ajout d'arcs multiples
+		System.out.println("\nAjout de trois arcs (5, 6)");
+		for(int i = 0; i < 3; i++) {
+			am.addArc(5, 6);
+		}
+		System.out.println("isArc(5, 6) après ajouts multiples : " + am.isArc(5, 6));
+		System.out.println("Valeur dans la matrice [5][6] : " + am.getMatrix()[5][6]);
+		
+		System.out.println("\nSuppression d'un arc (5, 6)");
+		am.removeArc(5, 6);
+		System.out.println("Valeur dans la matrice [5][6] après suppression : " + am.getMatrix()[5][6]);
+		
+		// Test avec indices invalides
+		System.out.println("\nTest avec indices invalides :");
+		System.out.println("isArc(-1, 5) : " + am.isArc(-1, 5));
+		System.out.println("isArc(0, 15) : " + am.isArc(0, 15));
+		
+		System.out.println("\nNombre final d'arcs : " + am.getNbArcs());
 	}
 }

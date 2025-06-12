@@ -103,22 +103,38 @@ public class AdjacencyMatrixUndirectedGraph {
      	* @return true if the edge is in the graph.
      	*/
 	public boolean isEdge(int x, int y) {
-		// A completer
-		return true;		
+		if (x < 0 || x >= nbNodes || y < 0 || y >= nbNodes) {
+			return false;
+		}
+		return matrix[x][y] > 0;		
 	}
 	
 	/**
      	* removes the edge (x,y) if there exists one between these nodes in the graph.
     	 */
 	public void removeEdge(int x, int y) {
-		// A completer
+		if (x < 0 || x >= nbNodes || y < 0 || y >= nbNodes) {
+			return;
+		}
+		
+		if (matrix[x][y] > 0) {
+			matrix[x][y] = matrix[x][y] - 1;
+			matrix[y][x] = matrix[y][x] - 1; // Graphe non orienté - symétrie
+			nbEdges--;
+		}
 	}
 
 	/**
      	* adds the edge (x,y) if there is not already one.
      	*/
 	public void addEdge(int x, int y) {
-		// A completer
+		if (x < 0 || x >= nbNodes || y < 0 || y >= nbNodes) {
+			return;
+		}
+		
+		matrix[x][y] = matrix[x][y] + 1;
+		matrix[y][x] = matrix[y][x] + 1; // Graphe non orienté - symétrie
+		nbEdges++;
 	}
 
 	
@@ -165,7 +181,29 @@ public class AdjacencyMatrixUndirectedGraph {
 		System.out.println("\nAfter removing one edge {3,5} :");
 		am.removeEdge(3,5);
 		System.out.println(am);
-		// A completer
+		
+		System.out.println("=== Tests des méthodes ===");
+		
+		// Test isEdge
+		System.out.println("isEdge(0, 1) : " + am.isEdge(0, 1));
+		System.out.println("isEdge(3, 5) : " + am.isEdge(3, 5));
+		
+		// Test addEdge et removeEdge
+		System.out.println("\nAjout d'une arête (7, 8)");
+		am.addEdge(7, 8);
+		System.out.println("isEdge(7, 8) après ajout : " + am.isEdge(7, 8));
+		System.out.println("isEdge(8, 7) après ajout : " + am.isEdge(8, 7)); // Symétrie
+		
+		System.out.println("\nSuppression de l'arête (7, 8)");
+		am.removeEdge(7, 8);
+		System.out.println("isEdge(7, 8) après suppression : " + am.isEdge(7, 8));
+		
+		// Test avec indices invalides
+		System.out.println("\nTest avec indices invalides :");
+		System.out.println("isEdge(-1, 5) : " + am.isEdge(-1, 5));
+		System.out.println("isEdge(0, 15) : " + am.isEdge(0, 15));
+		
+		System.out.println("\nNombre final d'arêtes : " + am.getNbEdges());
 	}
 
 }
