@@ -129,15 +129,48 @@ public class AdjacencyListDirectedGraph {
 	 * @return true if arc (from,to) exists in the graph
  	 */
     public boolean isArc(DirectedNode from, DirectedNode to) {
-    	// A completer
-    	return false;
+        if (from == null || to == null) {
+            return false;
+        }
+        
+        DirectedNode nodeFrom = getNodeOfList(from);
+        
+        for (Arc arc : nodeFrom.getArcSucc()) {
+            if (arc.getSecondNode().equals(to)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     /**
 	 * Removes the arc (from,to), if it exists. And remove this arc and the inverse in the list of arcs from the two extremities (nodes)
  	 */
     public void removeArc(DirectedNode from, DirectedNode to) {
-    	// A completer
+    	if(isArc(from, to)){
+    		DirectedNode nodeFrom = getNodeOfList(from);
+    		DirectedNode nodeTo = getNodeOfList(to);
+    		
+    		Arc arcToRemove = null;
+    		
+    		for (Arc arc : nodeFrom.getArcSucc()) {
+    			if (arc.getSecondNode().equals(nodeTo)) {
+    				arcToRemove = arc;
+    				break;
+    			}
+    		}
+    		
+    		if (arcToRemove != null) {
+    			nodeFrom.getArcSucc().remove(arcToRemove);
+    			
+    			nodeTo.getArcPred().remove(arcToRemove);
+    			
+    			this.arcs.remove(arcToRemove);
+    			
+    			this.nbArcs--;
+    		}
+    	}
     }
 
     /**
@@ -146,7 +179,19 @@ public class AdjacencyListDirectedGraph {
   	* On non-valued graph, every arc has a weight equal to 0.
  	*/
     public void addArc(DirectedNode from, DirectedNode to) {
-    	// A completer
+    	if(!isArc(from, to)){
+    		DirectedNode nodeFrom = getNodeOfList(from);
+    		DirectedNode nodeTo = getNodeOfList(to);
+    		
+    		Arc newArc = new Arc(nodeFrom, nodeTo, 0); // Poids 0 par défaut pour graphe non valué
+    		
+    		nodeFrom.addArc(newArc); // Ajoute à arcSucc de 'from'
+    		nodeTo.addArc(newArc);   // Ajoute à arcPred de 'to'
+    		
+    		this.arcs.add(newArc);
+    		
+    		this.nbArcs++;
+    	}
     }
 
     //--------------------------------------------------
@@ -165,7 +210,22 @@ public class AdjacencyListDirectedGraph {
      */
     public int[][] toAdjacencyMatrix() {
         int[][] matrix = new int[nbNodes][nbNodes];
-     // A completer
+        
+        for (DirectedNode node : this.nodes) {
+            int i = node.getLabel();
+            
+            for (Arc arc : node.getArcSucc()) {
+                int j = arc.getSecondNode().getLabel();
+                
+                int weight = arc.getWeight();
+                if (weight == 0) {
+                    weight = 1; // Pour les graphes non valués, on met 1
+                }
+                
+                matrix[i][j] = weight;
+            }
+        }
+        
         return matrix;
     }
 
@@ -173,9 +233,30 @@ public class AdjacencyListDirectedGraph {
 	 * @return a new graph implementing IDirectedGraph interface which is the inverse graph of this
  	 */
     public AdjacencyListDirectedGraph computeInverse() {
-        AdjacencyListDirectedGraph g = new AdjacencyListDirectedGraph(this); // creation of a copy of the current graph. 
-        // A completer
-        return g;
+        AdjacencyListDirectedGraph inverse = new AdjacencyListDirectedGraph();
+        
+        inverse.nbNodes = this.nbNodes;
+        for (DirectedNode node : this.nodes) {
+            inverse.nodes.add(new DirectedNode(node.getLabel()));
+        }
+        
+        for (Arc arc : this.arcs) {
+            DirectedNode originalFrom = arc.getFirstNode();
+            DirectedNode originalTo = arc.getSecondNode();
+            
+            DirectedNode newFrom = inverse.getNodes().get(originalTo.getLabel());
+            DirectedNode newTo = inverse.getNodes().get(originalFrom.getLabel());
+            
+            Arc inverseArc = new Arc(newFrom, newTo, arc.getWeight());
+            
+            newFrom.addArc(inverseArc); // Ajoute à arcSucc
+            newTo.addArc(inverseArc);   // Ajoute à arcPred
+            
+            inverse.arcs.add(inverseArc);
+        }
+        
+        inverse.nbArcs = this.nbArcs;
+        return inverse;
     }
     
     @Override
@@ -208,6 +289,66 @@ public class AdjacencyListDirectedGraph {
         AdjacencyListDirectedGraph al = new AdjacencyListDirectedGraph(Matrix);
         System.out.println(al);
         System.out.println("(n_7,n_3) is it in the graph ? " +  al.isArc(al.getNodes().get(7), al.getNodes().get(3)));
-        // A completer
+        
+        System.out.println("\n=== Tests des méthodes pour graphes orientés ===");
+        
+        DirectedNode node0 = al.getNodes().get(0);
+        DirectedNode node1 = al.getNodes().get(1);
+        DirectedNode node2 = al.getNodes().get(2);
+        DirectedNode node3 = al.getNodes().get(3);
+        
+        System.out.println("isArc(n_0, n_1) : " + al.isArc(node0, node1));
+        System.out.println("isArc(n_1, n_0) : " + al.isArc(node1, node0)); // Direction opposée
+        System.out.println("isArc(n_1, n_2) : " + al.isArc(node1, node2));
+        
+        System.out.println("\nAjout d'un arc (n_0, n_9)");
+        DirectedNode node9 = al.getNodes().get(9);
+        System.out.println("Avant ajout - isArc(n_0, n_9) : " + al.isArc(node0, node9));
+        al.addArc(node0, node9);
+        System.out.println("Après ajout - isArc(n_0, n_9) : " + al.isArc(node0, node9));
+        System.out.println("Direction opposée - isArc(n_9, n_0) : " + al.isArc(node9, node0));
+        System.out.println("Nombre d'arcs après ajout : " + al.getNbArcs());
+        
+        System.out.println("\nSuppression de l'arc (n_0, n_9)");
+        al.removeArc(node0, node9);
+        System.out.println("Après suppression - isArc(n_0, n_9) : " + al.isArc(node0, node9));
+        System.out.println("Nombre d'arcs après suppression : " + al.getNbArcs());
+        
+        System.out.println("\n=== Test de conversion en matrice d'adjacence ===");
+        int[][] matrix = al.toAdjacencyMatrix();
+        System.out.println("Matrice d'adjacence (extrait 5x5) :");
+        for (int i = 0; i < Math.min(5, matrix.length); i++) {
+            for (int j = 0; j < Math.min(5, matrix[i].length); j++) {
+                System.out.print(matrix[i][j] + "\t");
+            }
+            System.out.println();
+        }
+        
+        System.out.println("\n=== Test de computeInverse() ===");
+        AdjacencyListDirectedGraph inverse = al.computeInverse();
+        
+        System.out.println("Graphe original - Successeurs de n_1 :");
+        for (Arc arc : node1.getArcSucc()) {
+            System.out.print(arc.getSecondNode() + " ");
+        }
+        
+        System.out.println("\nGraphe inverse - Successeurs de n_1 :");
+        DirectedNode inverseNode1 = inverse.getNodes().get(1);
+        for (Arc arc : inverseNode1.getArcSucc()) {
+            System.out.print(arc.getSecondNode() + " ");
+        }
+        
+        System.out.println("\n\nNombre d'arcs original : " + al.getNbArcs());
+        System.out.println("Nombre d'arcs inverse : " + inverse.getNbArcs());
+        
+        System.out.println("\nVérification cohérence matrice/liste :");
+        for (int i = 0; i < Math.min(3, matrix.length); i++) {
+            for (int j = 0; j < Math.min(3, matrix[i].length); j++) {
+                boolean matrixArc = matrix[i][j] > 0;
+                boolean listArc = al.isArc(al.getNodes().get(i), al.getNodes().get(j));
+                System.out.println("Arc (" + i + "->" + j + ") - Matrice: " + matrixArc + ", Liste: " + listArc + 
+                                 " " + (matrixArc == listArc ? "✓" : "✗"));
+            }
+        }
     }
 }
