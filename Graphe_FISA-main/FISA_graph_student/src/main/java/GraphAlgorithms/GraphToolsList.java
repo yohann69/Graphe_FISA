@@ -95,6 +95,35 @@ public class GraphToolsList  extends GraphTools {
 	}
 	
 	/**
+	 * Affiche l'état actuel de tous les sommets
+	 * @param nbNodes nombre de sommets dans le graphe
+	 */
+	public static void afficherEtatsSommets(int nbNodes) {
+		System.out.println("\nÉtat des sommets après DFS :");
+		System.out.println("0=non visité, 1=en cours de visite, 2=totalement visité");
+		
+		for (int i = 0; i < nbNodes; i++) {
+			String etat;
+			switch (visite[i]) {
+				case 0: etat = "non visité"; break;
+				case 1: etat = "en cours de visite"; break;
+				case 2: etat = "totalement visité"; break;
+				default: etat = "état inconnu"; break;
+			}
+			System.out.println("Sommet " + i + " : " + etat + 
+							  " (début=" + debut[i] + ", fin=" + fin[i] + ")");
+		}
+	}
+	
+	/**
+	 * Active ou désactive le mode debug pour voir les arcs de retour et avant/croisés
+	 * @param debug true pour activer, false pour désactiver
+	 */
+	public static void setDebugMode(boolean debug) {
+		_DEBBUG = debug ? 1 : 0;
+	}
+	
+	/**
 	 * Exploration complète du graphe en utilisant le parcours en profondeur (DFS) récursif
 	 * Lance l'exploration depuis les sommets non visités
 	 * @param graph le graphe à explorer
@@ -137,13 +166,29 @@ public class GraphToolsList  extends GraphTools {
 		
 		System.out.print(sommet + " ");
 		
+		// Explorer récursivement tous les successeurs
 		DirectedNode node = graph.getNodes().get(sommet);
 		for (int i = 0; i < graph.getNbNodes(); i++) {
-			if (graph.isArc(node, graph.getNodes().get(i)) && visite[i] == 0) {
-				explorerSommet(graph, i);
+			if (graph.isArc(node, graph.getNodes().get(i))) {
+				if (visite[i] == 0) {
+					// Arc d'arbre : vers un sommet non visité
+					explorerSommet(graph, i);
+				} else if (visite[i] == 1) {
+					// Arc de retour : vers un sommet en cours de visite
+					// (détection de cycle)
+					if (_DEBBUG > 0) {
+						System.out.print("[Arc retour " + sommet + "->" + i + "] ");
+					}
+				} else if (visite[i] == 2) {
+					// Arc avant ou croisé : vers un sommet totalement visité
+					if (_DEBBUG > 0) {
+						System.out.print("[Arc avant/croisé " + sommet + "->" + i + "] ");
+					}
+				}
 			}
 		}
 		
+		visite[sommet] = 2;
 		fin[sommet] = cpt++;
 	}
 
@@ -170,16 +215,30 @@ public class GraphToolsList  extends GraphTools {
 		List<Integer> bfsResult7 = BFS(al, 7);
 		
 		System.out.println("\n" + "=".repeat(60));
-		System.out.println("TEST DU PARCOURS DFS RÉCURSIF");
+		System.out.println("TEST DU PARCOURS DFS RÉCURSIF AVEC 3 ÉTATS");
 		System.out.println("=".repeat(60));
 		
+		System.out.println(">>> Test de la méthode explorerGraphe sur le graphe généré :");
 		List<Integer> dfsResult = explorerGraphe(al);
 		System.out.println("Résultat sous forme de liste : " + dfsResult);
 		System.out.println("Nombre de nœuds visités : " + dfsResult.size() + "/" + al.getNbNodes());
 		
+		afficherEtatsSommets(al.getNbNodes());
+		
+		verifyDFSResults(al, dfsResult);
+		
+		System.out.println("\n=== Test avec mode DEBUG activé (détection des types d'arcs) ===");
+		setDebugMode(true);
+		System.out.println(">>> DFS avec affichage des arcs de retour et avant/croisés :");
+		List<Integer> dfsDebugResult = explorerGraphe(al);
+		setDebugMode(false); // Désactiver après le test
+		
 		System.out.println("\n=== Comparaison BFS vs DFS ===");
 		System.out.println("BFS depuis nœud 0 : " + bfsResult0);
 		System.out.println("DFS complet       : " + dfsResult);
+		
+		System.out.println("\n=== Test de cohérence (multiples exécutions) ===");
+		testDFSConsistency(al);
 		
 		System.out.println("\n" + "=".repeat(60));
 		System.out.println("VÉRIFICATION DES PROPRIÉTÉS BFS");
@@ -208,13 +267,18 @@ public class GraphToolsList  extends GraphTools {
 		}
 		
 		int visitedCount = 0;
-		for (boolean isVisited : visited) {
-			if (isVisited) visitedCount++;
+		int totallyVisitedCount = 0;
+		for (int i = 0; i < graph.getNbNodes(); i++) {
+			if (visited[i]) visitedCount++;
+			if (visite[i] == 2) totallyVisitedCount++; // État "totalement visité"
 		}
 		
 		System.out.println("  - Sommets attendus : " + graph.getNbNodes());
 		System.out.println("  - Sommets visités  : " + visitedCount);
-		System.out.println("  - Status : " + (visitedCount == graph.getNbNodes() ? "✓ SUCCÈS" : "✗ ÉCHEC"));
+		System.out.println("  - Sommets totalement visités : " + totallyVisitedCount);
+		System.out.println("  - Status : " + (visitedCount == graph.getNbNodes() && 
+										   totallyVisitedCount == graph.getNbNodes() ? 
+										   "✓ SUCCÈS" : "✗ ÉCHEC"));
 		
 		// Vérification 2 : Aucun sommet n'est visité deux fois ?
 		System.out.println("\n✓ Vérification 2 : Unicité des visites");
