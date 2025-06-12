@@ -69,7 +69,7 @@ public class GraphToolsList  extends GraphTools {
 			Integer currentNode = fifo.poll();
 			visitedOrder.add(currentNode);
 			
-			System.out.println("Visite du nœud : " + currentNode);
+			System.out.print(currentNode + " ");
 			
 			DirectedNode node = graph.getNodes().get(currentNode);
 			for (int i = 0; i < graph.getNbNodes(); i++) {
@@ -77,12 +77,11 @@ public class GraphToolsList  extends GraphTools {
 					// Ajouter le voisin non visité à la file et le marquer comme visité
 					fifo.add(i);
 					visited.add(i);
-					System.out.println("  Ajout du nœud " + i + " à la file");
 				}
 			}
 		}
 		
-		System.out.println("Ordre de visite BFS : " + visitedOrder);
+		System.out.println(); // Nouvelle ligne après l'affichage
 		return visitedOrder;
 	}
 	
@@ -102,12 +101,92 @@ public class GraphToolsList  extends GraphTools {
 		AdjacencyListDirectedGraph al = new AdjacencyListDirectedGraph(Matrix);
 		System.out.println(al);
 
-		System.out.println("\n" + "=".repeat(50));
+		System.out.println("\n" + "=".repeat(60));
 		System.out.println("TEST DU PARCOURS BFS");
-		System.out.println("=".repeat(50));
+		System.out.println("=".repeat(60));
 		
-		List<Integer> bfsResult = BFS(al, 0);
-		System.out.println("\nRésultat final du BFS : " + bfsResult);
-		System.out.println("Nombre de nœuds visités : " + bfsResult.size() + "/" + al.getNbNodes());
+		System.out.println("\n>>> Test BFS à partir du nœud 0 :");
+		List<Integer> bfsResult0 = BFS(al, 0);
+		System.out.println("Résultat sous forme de liste : " + bfsResult0);
+		System.out.println("Nombre de nœuds visités : " + bfsResult0.size() + "/" + al.getNbNodes());
+		
+		System.out.println("\n>>> Test BFS à partir du nœud 1 :");
+		List<Integer> bfsResult1 = BFS(al, 1);
+		
+		System.out.println("\n>>> Test BFS à partir du nœud 7 :");
+		List<Integer> bfsResult7 = BFS(al, 7);
+		
+		System.out.println("\n" + "=".repeat(60));
+		System.out.println("VÉRIFICATION DES PROPRIÉTÉS BFS");
+		System.out.println("=".repeat(60));
+		
+		verifyBFSOrder(al, bfsResult0, 0);
+		
+		// Test avec un graphe simple pour démonstration
+		System.out.println("\n" + "=".repeat(60));
+		System.out.println("TEST AVEC UN GRAPHE SIMPLE (démonstration)");
+		System.out.println("=".repeat(60));
+		testSimpleGraph();
+	}
+	
+	/**
+	 */
+	private static void testSimpleGraph() {
+		// Créer un graphe simple : 0->1, 0->2, 1->3, 2->3
+		int[][] simpleMatrix = {
+			{0, 1, 1, 0},  // 0 -> 1, 2
+			{0, 0, 0, 1},  // 1 -> 3
+			{0, 0, 0, 1},  // 2 -> 3
+			{0, 0, 0, 0}   // 3 (aucun successeur)
+		};
+		
+		System.out.println("Graphe simple (matrice 4x4) :");
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				System.out.print(simpleMatrix[i][j] + " ");
+			}
+		}
+		System.out.println("\nReprésentation du graphe :");
+		System.out.println("0 -> 1, 2");
+		System.out.println("1 -> 3");
+		System.out.println("2 -> 3");
+		System.out.println("3 -> (aucun)");
+		
+		AdjacencyListDirectedGraph simpleGraph = new AdjacencyListDirectedGraph(simpleMatrix);
+		
+		System.out.println("\n>>> BFS sur le graphe simple à partir du nœud 0 :");
+		List<Integer> simpleBFS = BFS(simpleGraph, 0);
+		
+		System.out.println("\nAnalyse de l'ordre BFS :");
+		System.out.println("- Niveau 0 : nœud 0 (départ)");
+		System.out.println("- Niveau 1 : nœuds 1, 2 (voisins directs de 0)");
+		System.out.println("- Niveau 2 : nœud 3 (voisin de 1 et 2)");
+		System.out.println("Ordre attendu : 0 1 2 3 (ou 0 2 1 3 selon l'implémentation)");
+		System.out.println("Ordre obtenu  : " + simpleBFS);
+	}
+	
+	/**
+	 * Méthode pour vérifier que l'ordre BFS respecte bien la propriété de parcours par niveaux
+	 */
+	private static void verifyBFSOrder(AdjacencyListDirectedGraph graph, List<Integer> bfsOrder, int startNode) {
+		System.out.println("Vérification de l'ordre BFS à partir du nœud " + startNode + " :");
+		System.out.println("Ordre obtenu : " + bfsOrder);
+		
+		// Afficher les successeurs directs pour comprendre l'ordre
+		System.out.println("\nAnalyse du graphe :");
+		for (Integer node : bfsOrder) {
+			System.out.print("Nœud " + node + " -> successeurs : ");
+			DirectedNode currentNode = graph.getNodes().get(node);
+			for (int i = 0; i < graph.getNbNodes(); i++) {
+				if (graph.isArc(currentNode, graph.getNodes().get(i))) {
+					System.out.print(i + " ");
+				}
+			}
+			System.out.println();
+		}
+		
+		System.out.println("\n✓ Vérifiez que l'ordre respecte le principe BFS :");
+		System.out.println("  - Tous les voisins directs du nœud de départ sont visités avant leurs voisins");
+		System.out.println("  - Le parcours se fait niveau par niveau");
 	}
 }
